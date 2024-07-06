@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace BuberDinner.Contracts.Authentication;
 
-namespace BuberDinner.Contracts.Authentication
+public class AuthenticationResponse
 {
-    internal class AuthenticationResponse
-    {
-    }
+    public Guid ID { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+    public string Token { get; set; }
 }
