@@ -11,7 +11,8 @@ builder.Services.AddSwaggerGen();
 #endregion
 
 #region User Defined Services
-builder.Services.AddApplication().AddInfrastructure();
+builder.Services.AddApplication()
+                .AddInfrastructure(builder.Configuration);
 #endregion
 
 var app = builder.Build();
