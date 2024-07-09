@@ -36,7 +36,6 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             claims: claims,
             signingCredentials: signingCredentials
         );
-
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
 }
