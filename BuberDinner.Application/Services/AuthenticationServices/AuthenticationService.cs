@@ -1,11 +1,8 @@
-﻿using BuberDinner.Application.Common.FluentErrors;
-using BuberDinner.Application.Common.Interfaces.Authentication;
+﻿using BuberDinner.Application.Common.Interfaces.Authentication;
 using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Domain.Entities;
 using ErrorOr;
-using FluentResults;
-using OneOf;
 
 namespace BuberDinner.Application.Services.AuthenticationServices;
 
@@ -46,7 +43,7 @@ public class AuthenticationService : IAuthenticationService
         // 2. validate the password is correct
         if (user.Password != password)
         {
-            return new[] { Errors.Authentication.InValidCredentials };
+            return new[] { Errors.User.DuplicateEmail, Errors.Authentication.InValidCredentials };
         }
         // 3. Create JWT token
         var token = _jwtTokenGenerator.GenerateToken(user);

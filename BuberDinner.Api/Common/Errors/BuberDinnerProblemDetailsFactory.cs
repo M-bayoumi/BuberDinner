@@ -102,7 +102,7 @@ namespace BuberDinner.Api.Common.Errors
             }
 
             var errors = httpContext.Items[HttpContextItemKeys.Errors] as List<Error>;
-            if (traceId != null)
+            if (errors != null)
             {
                 problemDetails.Extensions.Add("errorCodes", errors.Select(e => e.Code));
             }
