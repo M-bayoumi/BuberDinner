@@ -1,7 +1,9 @@
 ﻿using BuberDinner.Application.Common.FluentErrors;
 using BuberDinner.Application.Common.Interfaces.Authentication;
 using BuberDinner.Application.Common.Interfaces.Persistence;
+using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Domain.Entities;
+using ErrorOr;
 using FluentResults;
 using OneOf;
 
@@ -17,12 +19,12 @@ public class AuthenticationService : IAuthenticationService
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
     }
-    public Result<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
+    public ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
     {
         // 1. validate the user doesn't exist
         if (_userRepository.GetUserByEmail(email) is not null)
         {
-            return Result.Fail<AuthenticationResult>(new[] { new DuplicateEmailError() });
+            return Errors.User.DuplicateEmail;
         }
 
         // 2. Create user (generate unique ID) & persist to db
@@ -33,18 +35,18 @@ public class AuthenticationService : IAuthenticationService
         var token = _jwtTokenGenerator.GenerateToken(user);
         return new AuthenticationResult(user, token);
     }
-    public AuthenticationResult Login(string email, string password)
+    public ErrorOr<AuthenticationResult> Login(string email, string password)
     {
         // 1. validate the user exist
         if (_userRepository.GetUserByEmail(email) is not User user)
         {
-            throw new Exception("User with given email does not exist.");
+            return Errors.Authentication.InValidCredentials;
         }
 
         // 2. validate the password is correct
         if (user.Password != password)
         {
-            throw new Exception("Invalid password.");
+            return new[] { Errors.Authentication.InValidCredentials };
         }
         // 3. Create JWT token
         var token = _jwtTokenGenerator.GenerateToken(user);
