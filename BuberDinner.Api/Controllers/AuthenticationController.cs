@@ -14,7 +14,7 @@ namespace BuberDinner.Api.Controllers
     [Route("auth")]
     public class AuthenticationController : ApiController
     {
-        private ISender _sender;
+        private ISender _sender;// interface segrigation
 
         public AuthenticationController(ISender sender)
         {
