@@ -1,5 +1,7 @@
 ﻿using BuberDinner.Application.Common.FluentErrors;
-using BuberDinner.Application.Services.AuthenticationServices;
+using BuberDinner.Application.Services.AuthenticationServices.Commands;
+using BuberDinner.Application.Services.AuthenticationServices.Common;
+using BuberDinner.Application.Services.AuthenticationServices.Queries;
 using BuberDinner.Contracts.Authentication;
 using BuberDinner.Domain.Common.Errors;
 using ErrorOr;
@@ -11,16 +13,18 @@ namespace BuberDinner.Api.Controllers
     [Route("auth")]
     public class AuthenticationController : ApiController
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationCommandService _authenticationCommandService;
+        private readonly IAuthenticationQueryService _authenticationQueryService;
 
-        public AuthenticationController(IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationCommandService authenticationCommandService, IAuthenticationQueryService authenticationQueryService)
         {
-            _authenticationService = authenticationService;
+            _authenticationCommandService = authenticationCommandService;
+            _authenticationQueryService = authenticationQueryService;
         }
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest request)
         {
-            ErrorOr<AuthenticationResult> registerResult = _authenticationService.Register(
+            ErrorOr<AuthenticationResult> registerResult = _authenticationCommandService.Register(
                 request.FirstName,
                 request.LastName,
                 request.Email,
@@ -61,7 +65,7 @@ namespace BuberDinner.Api.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginRequest request)
         {
-            ErrorOr<AuthenticationResult> loginResult = _authenticationService.Login(
+            ErrorOr<AuthenticationResult> loginResult = _authenticationQueryService.Login(
                 request.Email,
                 request.Password);
 

@@ -1,6 +1,6 @@
 ﻿using BuberDinner.Domain.Entities;
 
-namespace BuberDinner.Application.Services.AuthenticationServices;
+namespace BuberDinner.Application.Services.AuthenticationServices.Common;
 
 public class AuthenticationResult
 {
