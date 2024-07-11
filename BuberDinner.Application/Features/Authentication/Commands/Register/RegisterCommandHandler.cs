@@ -20,7 +20,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
     }
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-  
+        await Task.CompletedTask; // to remove warning
+
         // 1. validate the user doesn't exist
         if (_userRepository.GetUserByEmail(request.Email) is not null)
         {

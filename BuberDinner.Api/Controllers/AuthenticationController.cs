@@ -1,11 +1,10 @@
-﻿using BuberDinner.Application.Common.FluentErrors;
-using BuberDinner.Application.Features.Authentication.Commands.Register;
+﻿using BuberDinner.Application.Features.Authentication.Commands.Register;
 using BuberDinner.Application.Features.Authentication.Common;
 using BuberDinner.Application.Features.Authentication.Queries.Login;
 using BuberDinner.Contracts.Authentication;
 using BuberDinner.Domain.Common.Errors;
 using ErrorOr;
-using FluentResults;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,18 +14,19 @@ namespace BuberDinner.Api.Controllers
     public class AuthenticationController : ApiController
     {
         private ISender _sender;// interface segrigation
-
-        public AuthenticationController(ISender sender)
+        private IMapper _mapper;
+        public AuthenticationController(ISender sender, IMapper mapper)
         {
             _sender = sender;
+            _mapper = mapper;
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
-            var command = new RegisterCommand(request.FirstName,request.LastName,request.Email,request.Password);
+            var command = _mapper.Map<RegisterCommand>(request);
             ErrorOr<AuthenticationResult> registerResult = await _sender.Send(command);
 
-            return registerResult.Match(authResult => Ok(MapAuthResult(authResult)),
+            return registerResult.Match(authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
                 errors => Problem(errors));
 
 
@@ -61,16 +61,16 @@ namespace BuberDinner.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
-            var query = new LoginQuery(request.Email, request.Password);
+            var query = _mapper.Map<LoginQuery>(request);
 
             ErrorOr<AuthenticationResult> loginResult = await _sender.Send(query);
 
-            if(loginResult.IsError && loginResult.FirstError == Errors.Authentication.InValidCredentials)
-                return Problem(statusCode:StatusCodes.Status401Unauthorized,title:loginResult.FirstError.Description);
+            if (loginResult.IsError && loginResult.FirstError == Errors.Authentication.InValidCredentials)
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: loginResult.FirstError.Description);
 
             return loginResult.Match(
-                authResult => Ok(MapAuthResult(authResult)),
-                errors=> Problem(errors));
+                authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
+                errors => Problem(errors));
 
         }
 
