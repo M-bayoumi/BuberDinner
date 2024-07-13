@@ -7,12 +7,8 @@ public class AuthenticationResponse
     public string LastName { get; set; }
     public string Email { get; set; }
     public string Token { get; set; }
-    public AuthenticationResponse(Guid iD, string firstName, string lastName, string email, string token)
+    public AuthenticationResponse()
     {
-        ID = iD;
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        Token = token;
+
     }
 }

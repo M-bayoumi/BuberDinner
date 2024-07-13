@@ -1,19 +1,21 @@
 ﻿using BuberDinner.Api.Common.Http;
 using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BuberDinner.Api.Controllers;
 
 [ApiController]
+[Authorize]
 public class ApiController : ControllerBase
 {
     protected IActionResult Problem(List<Error> errors)
     {
-        if (errors.All(error => error.Type == ErrorType.Validation))
-        {
-            return ValidationProblemMethod(errors);
-        }
+        //if (errors.All(error => error.Type == ErrorType.Validation))
+        //{
+        //    return ValidationProblemMethod(errors);
+        //}
 
         HttpContext.Items[HttpContextItemKeys.Errors] = errors;
         var firstError = errors[0];
