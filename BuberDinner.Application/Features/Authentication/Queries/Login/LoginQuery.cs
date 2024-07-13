@@ -1,5 +1,4 @@
-﻿using BuberDinner.Application.Features.Authentication.Commands.Register;
-using BuberDinner.Application.Features.Authentication.Common;
+﻿using BuberDinner.Application.Features.Authentication.Common;
 using ErrorOr;
 using MediatR;
 
